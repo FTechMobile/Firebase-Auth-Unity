@@ -18,7 +18,10 @@ final public class FBASignIn: NSObject {
         return shared
     }
     
+    public static var versionNumber: String  = "1.0.1"
+
     static internal var isEndableFBA: Bool = true
+    
     
     internal private(set) var auth3rdProviders: [FBAuthType: FBU3rdAuthProviderProtocol.Type] = [:]
     
