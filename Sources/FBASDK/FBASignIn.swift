@@ -11,7 +11,6 @@ import UIKit
 
 @objcMembers
 final public class FBASignIn: NSObject {
-    public weak var delegate: FBAuthenDelegate?
     
     private static let shared: FBASignIn = FBASignIn()
     
@@ -19,15 +18,52 @@ final public class FBASignIn: NSObject {
         return shared
     }
     
-    static public var isEndableFBA: Bool = true
+    static internal var isEndableFBA: Bool = true
     
     internal private(set) var auth3rdProviders: [FBAuthType: FBU3rdAuthProviderProtocol.Type] = [:]
-
-
-    public func signIn(with authType: FBAuthType, context: UIViewController) {
-        authenWith3rd(context: context, type: authType)
+    
+    public func loginWithGoogle(context: UIViewController,
+                                onSuccess: @escaping (_ token: String) -> Void,
+                         onFailure: @escaping (FBAError) -> Void) {
+        FBASignIn.isEndableFBA = true
+        authenWith3rd(context: context, type: .google, onSuccess: onSuccess, onFailure: onFailure)
     }
     
+    public func loginWithFacebook(context: UIViewController,
+                         onSuccess: @escaping (_ token: String) -> Void,
+                         onFailure: @escaping (FBAError) -> Void) {
+        FBASignIn.isEndableFBA = true
+        authenWith3rd(context: context, type: .facebook, onSuccess: onSuccess, onFailure: onFailure)
+    }
+    
+    public func loginWithApple(context: UIViewController,
+                         onSuccess: @escaping (_ token: String) -> Void,
+                         onFailure: @escaping (FBAError) -> Void) {
+        FBASignIn.isEndableFBA = true
+        authenWith3rd(context: context, type: .apple, onSuccess: onSuccess, onFailure: onFailure)
+    }
+    
+    public func loginWithGoogleWithoutFirebase(context: UIViewController,
+                         onSuccess: @escaping (_ token: String) -> Void,
+                         onFailure: @escaping (FBAError) -> Void) {
+        FBASignIn.isEndableFBA = false
+        authenWith3rd(context: context, type: .google, onSuccess: onSuccess, onFailure: onFailure)
+    }
+    
+    public func loginWithFacebookWithoutFirebase(context: UIViewController,
+                         onSuccess: @escaping (_ token: String) -> Void,
+                         onFailure: @escaping (FBAError) -> Void) {
+        FBASignIn.isEndableFBA = false
+        authenWith3rd(context: context, type: .facebook, onSuccess: onSuccess, onFailure: onFailure)
+    }
+    
+    public func loginWithAppleWithoutFirebase(context: UIViewController,
+                         onSuccess: @escaping (_ token: String) -> Void,
+                         onFailure: @escaping (FBAError) -> Void) {
+        FBASignIn.isEndableFBA = false
+        authenWith3rd(context: context, type: .apple, onSuccess: onSuccess, onFailure: onFailure)
+    }
+ 
     internal func config() {
         invoke(provider: FBGoogleAuthenProvider.self, type: .google)
         invoke(provider: FBAppleAuthenProvider.self, type: .apple)
@@ -39,5 +75,7 @@ final public class FBASignIn: NSObject {
     }
     
 }
+
+
 
 
